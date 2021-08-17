@@ -91,7 +91,7 @@ DATABASES = {
         "NAME": getenv("POSTGRES_DEFAULT_DB", default="postgres"),
         "USER": getenv("POSTGRES_DEFAULT_USER", default="postgres"),
         "PASSWORD": getenv("POSTGRES_DEFAULT_PASSWORD", default="postgres"),
-        "HOST": getenv("POSTGRES_DEFAULT_HOSTNAME", default="postgres"),
+        "HOST": getenv("POSTGRES_DEFAULT_HOSTNAME", default="127.0.0.1"),
         "PORT": 5432,
         "CONN_MAX_AGE": 600,
         "DISABLE_SERVER_SIDE_CURSORS": True,
