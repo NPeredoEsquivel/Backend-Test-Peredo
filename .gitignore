@@ -1,6 +1,5 @@
 *.pyc
 .idea/
-./venv
 .bash_history
 .cache/
 .ipython/
@@ -14,3 +13,4 @@ htmlcov/
 *.ipynb
 .DS_Store
 _*/
+/venv/
