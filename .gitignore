@@ -1,6 +1,6 @@
 *.pyc
 .idea/
-.env
+./venv
 .bash_history
 .cache/
 .ipython/
