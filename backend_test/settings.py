@@ -38,6 +38,7 @@ APPEND_SLASH = False
 # Application definition
 
 INSTALLED_APPS = [
+    "yumminess.apps.YumminessConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
