@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from .models import Employee
@@ -72,7 +72,8 @@ class EmployeeDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'yumminess:employee-detail'
 
 
-class EmployeeUpdateView(UpdateView):
+class EmployeeUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/yumminess/login'
     model = Employee
     template_name = 'employee/update.html'
     context_object_name = 'employee'
@@ -80,3 +81,9 @@ class EmployeeUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('yumminess:employee-list', kwargs={'pk': self.object.id})
+
+
+class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
+    model = Employee
+    template_name = 'employee/delete.html'
+    success_url = reverse_lazy('yumminess:employee-list')
