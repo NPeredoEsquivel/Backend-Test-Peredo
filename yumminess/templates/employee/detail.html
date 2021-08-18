@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+
+{% block content_body %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Employee Details #{{employee.id}}</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+              <dt class="col-sm-3">Employee first name</dt>
+              <dd class="col-sm-9">{{ employee.first_name }}</dd>
+              <dt class="col-sm-3">Employee last name</dt>
+              <dd class="col-sm-9">{{ employee.last_name }}</dd>
+            </dl>
+
+        </div>
+    </div>
+{% endblock content_body %}

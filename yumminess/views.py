@@ -2,7 +2,12 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
+from django.views.generic import ListView
+from .models import Employee
 
 
 class LoginView(View):
@@ -43,6 +48,35 @@ class Dashboard(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
+class EmployeeListView(LoginRequiredMixin, ListView):
+    login_url = '/yumminess/login'
+    model = Employee
+    template_name = 'employee/list.html'
+
+    def get_queryset(self):
+        return Employee.objects.all()
 
 
+class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/yumminess/login'
+    model = Employee
+    template_name = 'employee/create.html'
+    fields = ('country', 'email', 'first_name', 'last_name', 'password', 'phone_number', 'username')
+    success_url = reverse_lazy('yumminess:employee-list')
 
+
+class EmployeeDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/yumminess/login'
+    model = Employee
+    template_name = 'employee/detail.html'
+    context_object_name = 'yumminess:employee-detail'
+
+
+class EmployeeUpdateView(UpdateView):
+    model = Employee
+    template_name = 'employee/update.html'
+    context_object_name = 'employee'
+    fields = ('country', 'email', 'first_name', 'last_name', 'password', 'phone_number', 'username')
+
+    def get_success_url(self):
+        return reverse_lazy('yumminess:employee-list', kwargs={'pk': self.object.id})
