@@ -9,7 +9,6 @@ class Employee(models.Model):
     email = models.EmailField(max_length=50)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    password = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=20)
     username = models.CharField(max_length=30)
     enabled = models.BooleanField(default=True)
@@ -37,7 +36,7 @@ class MenuPlate(models.Model):
     )
 
     menu_plate_name = models.CharField(max_length=30)
-    menu_plate_type = models.CharField(max_length=30, choices=MENU_PLATE_TYPES)
+    menu_plate_type = models.IntegerField(choices=MENU_PLATE_TYPES)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

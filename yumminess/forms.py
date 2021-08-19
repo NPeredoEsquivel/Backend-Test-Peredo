@@ -16,6 +16,7 @@ class MenuPlateForm(forms.ModelForm):
 
 
 class MenuOptionForm(forms.ModelForm):
+
     class Meta:
         model = MenuOption
         exclude = ['created_at']

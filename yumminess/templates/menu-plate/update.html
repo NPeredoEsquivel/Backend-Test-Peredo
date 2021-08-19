@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+
+{% block content_body %}
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Menu plate Update #{{book.id}}</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit" class="btn btn-success">Update</button>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock content_body %}
