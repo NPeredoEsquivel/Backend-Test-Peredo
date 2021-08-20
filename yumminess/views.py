@@ -7,6 +7,9 @@ from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 from django.views.generic import ListView
+from django.contrib.auth.models import User
+from datetime import date
+
 from .models import Employee, MenuPlate, MenuOption, Menu, Order
 from .forms import EmployeeForm, MenuPlateForm, MenuOptionForm, MenuForm, OrderForm
 
@@ -63,6 +66,15 @@ class EmployeeCreateView(LoginRequiredMixin, CreateView):
     form_class = EmployeeForm
     template_name = 'employee/create.html'
     success_url = reverse_lazy('yumminess:employee-list')
+
+    def form_valid(self, form):
+        employee = form.save(commit=False)
+        User.objects.create_user(username=form.cleaned_data['username'],
+                                 email=form.cleaned_data['email'],
+                                 password=form.cleaned_data['password'])
+        employee.user = User.objects.get(username=employee.username)
+        employee.save()
+        return super().form_valid(form)
 
 
 class EmployeeDetailView(LoginRequiredMixin, DetailView):
@@ -223,6 +235,17 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
     form_class = OrderForm
     template_name = 'order/create.html'
     success_url = reverse_lazy('yumminess:order-list')
+
+    def get_form_kwargs(self):
+        today_date = date.today()
+        kwargs = super(OrderCreateView, self).get_form_kwargs()
+
+        menu = Menu.objects.get(created_at=today_date)
+        if menu:
+            kwargs['menu_options'] = MenuOption.objects.filter(menu__id=menu.id)
+        else:
+            kwargs['menu_options'] = MenuOption.objects.none()
+        return kwargs
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):

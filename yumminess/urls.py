@@ -1,10 +1,11 @@
 from django.urls import path
 from . import views
+from .decorators import unauthenticated_user
 
 
 app_name = 'yumminess'
 urlpatterns = [
-    path('login', views.LoginView.as_view(), name='login'),
+    path('login', unauthenticated_user(views.LoginView.as_view()), name='login'),
     path('logout', views.LogoutView.as_view(), name='logout'),
     path('dashboard', views.Dashboard.as_view(), name='dashboard'),
     path('employee/list', views.EmployeeListView.as_view(), name='employee-list'),
