@@ -117,7 +117,6 @@ class OrderForm(forms.ModelForm):
         model = Order
         exclude = ['created_at']
 
-        
     def __init__(self, *args, **kwargs):
         menu_options = kwargs.pop('menu_options')
         super(OrderForm, self).__init__(*args, **kwargs)
@@ -130,4 +129,3 @@ class OrderForm(forms.ModelForm):
         date_threshold = created_at_limit.replace(hour=11, minute=0, second=0, microsecond=0)
         if created_at_backend_value > date_threshold:
             raise forms.ValidationError("You can no longer create your Order. The deadline is set for 11:00 CLT")
-        aerherd
