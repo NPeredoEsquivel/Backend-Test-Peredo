@@ -26,6 +26,7 @@ urlpatterns = [
     path('menu/list', views.MenuListView.as_view(), name='menu-list'),
     path('menu/create', views.MenuCreateView.as_view(), name='menu-create'),
     path('menu/<int:pk>', views.MenuDetailView.as_view(), name='menu-detail'),
+    path('menu/<slug:menu_uuid>', views.MenuDetailView.as_view(), name='menu-detail'),
     path('menu/<int:pk>/update', views.MenuUpdateView.as_view(), name='menu-update'),
     path('menu/<int:pk>/delete', views.MenuDeleteView.as_view(), name='menu-delete'),
     path('order/list', views.OrderListView.as_view(), name='order-list'),

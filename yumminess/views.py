@@ -196,12 +196,28 @@ class MenuCreateView(LoginRequiredMixin, CreateView):
     template_name = 'menu/create.html'
     success_url = reverse_lazy('yumminess:menu-list')
 
+    def form_valid(self, form):
+        form.schedule_whatsapp_message()
+        return super(MenuCreateView, self).form_valid(form)
 
-class MenuDetailView(LoginRequiredMixin, DetailView):
-    login_url = '/yumminess/login'
+
+class MenuDetailView(DetailView):
     model = Menu
     template_name = 'menu/detail.html'
     context_object_name = 'yumminess:menu-detail'
+    pk_url_kwarg = 'pk'
+    uuid_url_kwarg = 'menu_uuid'
+    print(uuid_url_kwarg)
+
+    def get_object(self, queryset=None):
+        pk_kwarg = self.kwargs.get(self.pk_url_kwarg)
+        uuid_kwarg = self.kwargs.get(self.uuid_url_kwarg)
+
+        if pk_kwarg:
+            return Menu.objects.get(id=pk_kwarg)
+
+        if uuid_kwarg:
+            return Menu.objects.get(uuid=uuid_kwarg)
 
 
 class MenuUpdateView(LoginRequiredMixin, UpdateView):
@@ -246,6 +262,15 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         else:
             kwargs['menu_options'] = MenuOption.objects.none()
         return kwargs
+
+    def form_valid(self, form):
+        current_user = self.request.user
+        if not current_user.is_superuser:
+            order = form.save(commit=False)
+            employee = Employee.objects.get(user__id=current_user.id)
+            order.employee = employee
+            order.save()
+        return super().form_valid(form)
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):

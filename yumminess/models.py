@@ -20,13 +20,13 @@ class Employee(models.Model):
         return self.first_name + " " + self.last_name
 
 
-class WhatsappMessage(models.Model):
+class SlackMessage(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     message_text = models.CharField(max_length=500)
 
 
-class WhatsappMessageEmployee(models.Model):
-    whatsapp_message = models.ForeignKey(WhatsappMessage, on_delete=models.CASCADE)
+class SlackMessageEmployee(models.Model):
+    slack_message = models.ForeignKey(SlackMessage, on_delete=models.CASCADE)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
 
 

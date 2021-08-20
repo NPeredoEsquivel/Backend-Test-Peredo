@@ -108,6 +108,9 @@ class MenuForm(forms.ModelForm):
         if created_at_form_data < today_date:
             raise forms.ValidationError("The date must be higher than today\'s date")
 
+    def schedule_whatsapp_message:
+
+
 
 class OrderForm(forms.ModelForm):
     menu_options = forms.ModelChoiceField(queryset=MenuOption.objects.all())
