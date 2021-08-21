@@ -7,10 +7,10 @@ NODEFAULT = object()
 
 
 def getenv(
-    name: str,
-    *,
-    default: str = NODEFAULT,
-    coalesce: Callable[[str], T] = lambda value: value
+        name: str,
+        *,
+        default: str = NODEFAULT,
+        coalesce: Callable[[str], T] = lambda value: value
 ) -> T:
     """ Get environment variable value, try to safety parse it and apply coalesce
         function (identity as default).

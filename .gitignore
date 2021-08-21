@@ -15,3 +15,5 @@ htmlcov/
 _*/
 /venv/
 **/migrations/*
+celerybeat-schedule
+celerybeat.pid

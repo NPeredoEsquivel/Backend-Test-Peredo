@@ -240,3 +240,7 @@ LOGGING = {
         },
     },
 }
+
+
+SLACK_WEB_HOOK = getenv("SLACK_WEB_HOOK", default='')
+#SLACK_WEB_HOOK='https://hooks.slack.com/services/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'

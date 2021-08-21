@@ -15,7 +15,7 @@ class CelerySettings:
     # Time and date settings
     # https://docs.celeryproject.org/en/v4.3.0/userguide/configuration.html#time-and-date-settings
     CELERY_ENABLE_UTC = True
-    CELERY_TIMEZONE = "UTC"
+    CELERY_TIMEZONE = "America/Santiago"
     # Task settings
     # https://docs.celeryproject.org/en/v4.3.0/userguide/configuration.html#task-settings
     CELERY_TASK_SERIALIZER = "json"

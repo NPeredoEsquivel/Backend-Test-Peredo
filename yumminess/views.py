@@ -9,6 +9,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.contrib.auth.models import User
 from datetime import date
+from .tasks import slack_message_task
 
 from .models import Employee, MenuPlate, MenuOption, Menu, Order
 from .forms import EmployeeForm, MenuPlateForm, MenuOptionForm, MenuForm, OrderForm
@@ -197,7 +198,7 @@ class MenuCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('yumminess:menu-list')
 
     def form_valid(self, form):
-        form.schedule_whatsapp_message()
+        slack_message_task()
         return super(MenuCreateView, self).form_valid(form)
 
 
@@ -207,7 +208,6 @@ class MenuDetailView(DetailView):
     context_object_name = 'yumminess:menu-detail'
     pk_url_kwarg = 'pk'
     uuid_url_kwarg = 'menu_uuid'
-    print(uuid_url_kwarg)
 
     def get_object(self, queryset=None):
         pk_kwarg = self.kwargs.get(self.pk_url_kwarg)
