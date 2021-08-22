@@ -1,5 +1,45 @@
-{% extends 'index.html' %}
+{% extends 'base_generic.html' %}
 
-{% block content_body %}
-    Hola Order
-{% endblock content_body %}
+{% block content_main %}
+     <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Order list</h6>
+              <a href="{% url 'yumminess:order_create'%}" >
+                Create order
+              </a>
+
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <div class="table-responsive">
+                <table class="table table-bordered w-100 p-3">
+                  <thead>
+                    <tr>
+                      <th>Employee</th>
+                      <th>Option</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for single_order in orders %}
+                      <tr>
+                        <td>{{ single_order.employee }}</td>
+                        <td>{{ single_order.menu_option }}</td>
+                        <td>
+                          <a class="btn btn-primary btn-sm" href="{% url 'yumminess:order_detail' single_order.id %}">Detail</a>
+                          {% if user.is_superuser %}
+                              <a class="btn btn-primary btn-sm" href="{% url 'yumminess:order_update' single_order.id %}">Update</a>
+                              <a class="btn btn-danger btn-sm" href="{% url 'yumminess:order_delete' single_order.id %}">Delete</a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock content_main %}

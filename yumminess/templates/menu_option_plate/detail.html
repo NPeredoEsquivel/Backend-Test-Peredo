@@ -1,0 +1,35 @@
+{% extends 'base_generic.html' %}
+
+{% block content_main %}
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Menu option plate details</h6>
+                  <a href="{% url 'yumminess:menu_option_plate_list'%}" >
+                    Go back
+                  </a>
+              </div>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{object.menu_option_plate_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Option type</th>
+                        <td>
+                            {% if single_plate.menu_option_plate_type == 1 %}
+                                Entrance plate
+                            {% elif single_plate.menu_option_plate_type == 2 %}
+                                Bottom plate
+                            {% else %}
+                                Dessert plate
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content_main %}

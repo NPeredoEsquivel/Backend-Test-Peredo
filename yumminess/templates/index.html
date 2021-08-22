@@ -1,32 +1,171 @@
 {% extends 'base_generic.html' %}
 
 {% block content_main %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-          </li>
-        </ul>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <h1 class="h3 mb-0 text-gray-800">
+                Welcome !
+            </h1>
+        </div>
+
+    <div class="row d-flex justify-content-between">
+
+      <div class="w-50 p-3">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Pedidos del día</h6>
+              <a href="{% url 'yumminess:order_list'%}" >
+                Ver todas
+              </a>
+
+          </div>
+
+          <div class="card-body">
+            <div class="chart-area">
+              <div class="table-responsive">
+                <table class="table table-bordered " width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Empleado</th>
+                      <th>Orden</th>
+                      <th>Fecha Creación</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for single_order in orders %}
+                      <tr>
+                        <td>{{ single_order.employee }}</td>
+                        <td>{{ single_order.option }}</td>
+                        <td>{{ single_order.date_created }}</td>
+                        <td>
+                          <a class="btn btn-primary btn-sm" href="{% url 'yumminess:order_detail' single_order.id %}">Ver Orden</a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </nav>
+      <div class="w-50 p-3">
+        <div class="card shadow mb-4">
+
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Opciones del día</h6>
+            {% if user.is_superuser %}
+              <a href="{% url 'yumminess:menu_option_list'%}" >
+                Ver todos
+              </a>
+            {% endif %}
+          </div>
+
+          <div class="card-body">
+            <div class="chart-area">
+              <div class="table-responsive">
+                <table class="table table-bordered " width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Plato entrada</th>
+                      <th>Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for single_menu in menus %}
+                      <tr>
+                        <td>{{ single_menu.name }}</td>
+                        <td>{{ single_menu.options.all|join:", "}}</td>
+                        <td>
+                          {% if user.is_superuser %}
+                            <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_detail' single_menu.id %}">Ver Menu</a>
+                          {% else %}
+                            <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_detail' single_menu.uuid %}">Ver Menu</a>
+                          {% endif %}
+                          </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if not user.is_superuser %}
+          <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4 ">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-2">Ingresar pedido</div>
+                      <a class="btn btn-primary btn-sm" href="{% url 'yumminess:order_create' %}">Crear</a>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+    {% endif %}
+      </div>
+    </div>
+  </div>
+
+    {% if user.is_superuser %}
+        <div class="row d-flex justify-content-between">
+            <div class="card border-left-primary shadow h-100 py-2 w-25 p-3 px-2 ">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-2">Crear Plato de Comida</div>
+                    <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_option_plate_create' %}">Crear</a>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-left-success shadow h-100 py-2 w-25 p-3 px-2 ">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Crear Menú</div>
+                    <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_create' %}">Crear</a>
+
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-left-info shadow h-100 py-2 w-25 p-3 px-2 ">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Crear Empleado</div>
+                    <a class="btn btn-primary btn-sm" href="{% url 'yumminess:employee_create' %}">Crear</a>
+
+                  </div>
+                  <div class="col-auto">
+                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
 
 
-    {% block content_body %}
-    {% endblock content_body %}
+        </div>
+    {% endif %}
 {% endblock content_main %}

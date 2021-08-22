@@ -1,16 +1,63 @@
-{% extends 'index.html' %}
+{% extends 'base_generic.html' %}
+{% block content_main %}
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Menu detail</h6>
+                {% if not user.is_anonymous %}
+                  <a href="{% url 'yumminess:menu_list'%}" >
+                    Go back
+                  </a>
+                {% endif %}
+              </div>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{object.menu_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Menu date</th>
+                        <td>{{object.created_at}}</td>
+                    </tr>
+                    <tr>
+                        <th>Menu options</th>
+                        <td>
+                            {% for single_option in object.menu_options.all %}
+                            <ul>
+                                <li>{{ single_option.menu_option_name }}</li>
+                                <ul>
+                                    {% if single_option.menu_option_entrance_plate %}
+                                    <li>{{single_option.menu_option_entrance_plate}}</li>
+                                    {% endif %}
 
-{% block content_body %}
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Menu Details #{{menu.id}}</h5>
+                                    {% if single_option.menu_option_bottom_plate %}
+                                        <li>{{single_option.menu_option_bottom_plate}}</li>
+                                    {% endif %}
+
+                                    {% if single_option.menu_option_dessert_plate %}
+                                        <li>{{single_option.menu_option_dessert_plate}}</li>
+                                    {% endif %}
+                                </ul>
+                            </ul>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% if user.is_superuser %}
+                    <tr>
+                        <th>UUID</th>
+                        <td>
+                            {{ object.uuid }}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        <div class="d-flex justify-content-center">
+            {% if user.is_anonymous %}
+             <a class="nav-link" href="{% url 'yumminess:order_create' %}">Order option</a>
+            {% endif %}
         </div>
-        <div class="card-body">
-            <dl class="row">
-              <dt class="col-sm-3">Menu first name</dt>
-              <dd class="col-sm-9">{{ menu.name }}</dd>
-            </dl>
-
         </div>
     </div>
-{% endblock content_body %}
+{% endblock content_main %}

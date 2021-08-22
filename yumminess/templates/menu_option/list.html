@@ -1,0 +1,47 @@
+{% extends 'base_generic.html' %}
+
+{% block content_main %}
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Menu options</h6>
+              <a href="{% url 'yumminess:menu_option_create'%}" >
+                Create option
+              </a>
+
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <div class="table-responsive">
+                <table class="table table-bordered w-100 p-3" >
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Entrance plate</th>
+                      <th>Bottom plate</th>
+                      <th>Dessert plate</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for single_option in options %}
+                      <tr>
+                        <td>{{ single_option.menu_option_name }}</td>
+                        <td>{{ single_option.menu_option_entrance_plate.menu_option_plate_name }}</td>
+                        <td>{{ single_option.menu_option_bottom_plate.menu_option_plate_name }}</td>
+                        <td>{{ single_option.menu_option_dessert_plate.menu_option_plate_name }}</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_option_detail' single_option.id %}">Detail</a>
+                            <a class="btn btn-primary btn-sm" href="{% url 'yumminess:menu_option_update' single_option.id %}">Update</a>
+                            <a class="btn btn-danger btn-sm" href="{% url 'yumminess:menu_option_delete' single_option.id %}">Delete</a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+{% endblock content_main %}

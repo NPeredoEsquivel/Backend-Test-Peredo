@@ -1,14 +1,53 @@
-{% extends 'index.html' %}
+{% extends 'base_generic.html' %}
 
-{% block content_body %}
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Order Details #{{employee.id}}</h5>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-            </dl>
+{% block content_main %}
+     <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Order detail</h6>
+                  <a href="{% url 'yumminess:order_list'%}" >
+                    Go back
+                  </a>
 
+              </div>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{object.menu_option}}</td>
+                    </tr>
+                    <tr>
+                        <th>Entrance plate</th>
+                        <td>{{object.menu_option.menu_option_entrance_plate}}</td>
+                    </tr>
+                    <tr>
+                        <th>Bottom plate</th>
+                        <td>{{object.menu_option.menu_option_bottom_plate}}</td>
+                    </tr>
+                    <tr>
+                        <th>Dessert plate</th>
+                        <td>{{object.menu_option.menu_option_dessert_plate}}</td>
+                    </tr>
+                    <tr>
+                        <th>Employee</th>
+                        <td>{{object.employee}}</td>
+                    </tr>
+                    <tr>
+                        <th>Order customization</th>
+                        {% if object.order_customization %}
+                            <td>{{object.order_customization}}</td>
+                        {% else %}
+                            <td>Customization not available</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th>Ordered at</th>
+                        <td>{{object.created_at}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-{% endblock content_body %}
+
+{% endblock content_main %}

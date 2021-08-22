@@ -1,0 +1,40 @@
+{% extends 'base_generic.html' %}
+
+{% block content_main %}
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Option detail</h6>
+                  <a href="{% url 'yumminess:menu_option_list'%}" >
+                    Go back
+                  </a>
+
+              </div>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{object.menu_option_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Entrance plate</th>
+                        <td>{{object.menu_option_entrance_plate.menu_option_plate_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Bottom plate</th>
+                        <td>{{object.menu_option_bottom_plate.menu_option_plate_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Dessert plate</th>
+                        <td>{{object.menu_option_dessert_plate.menu_option_plate_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Menu option</th>
+                        <td>{{object.created_at}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content_main %}

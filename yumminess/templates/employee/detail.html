@@ -1,18 +1,39 @@
-{% extends 'index.html' %}
+{% extends 'base_generic.html' %}
+{% block content_main %}
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Employee detail</h6>
+                  <a href="{% url 'yumminess:employee_list'%}" >
+                    Go back
+                  </a>
 
-{% block content_body %}
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Employee Details #{{employee.id}}</h5>
-        </div>
-        <div class="card-body">
-            <dl class="row">
-              <dt class="col-sm-3">Employee first name</dt>
-              <dd class="col-sm-9">{{ employee.first_name }}</dd>
-              <dt class="col-sm-3">Employee last name</dt>
-              <dd class="col-sm-9">{{ employee.last_name }}</dd>
-            </dl>
+              </div>
 
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>First name</th>
+                        <td>{{object.first_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Name</th>
+                        <td>{{object.last_name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Username</th>
+                        <td>{{object.username}}</td>
+                    </tr>
+                    <tr>
+                        <th>Password</th>
+                        <td>{{object.password}}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{object.email}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-{% endblock content_body %}
+{% endblock content_main %}

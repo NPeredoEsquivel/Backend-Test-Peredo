@@ -1,9 +1,9 @@
-{% extends 'index.html' %}
+{% extends 'base_generic.html' %}
 
-{% block content_body %}
+{% block content_main %}
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Delete Menu option #{{object.id}}</h5>
+            <h5 class="card-title">Delete Menu plate #{{object.id}}</h5>
         </div>
         <div class="card-body">
             <form method="post">
@@ -15,4 +15,4 @@
             </form>
         </div>
     </div>
-{% endblock content_body %}
+{% endblock content_main %}
