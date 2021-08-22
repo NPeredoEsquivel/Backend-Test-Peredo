@@ -1,0 +1,31 @@
+{% if not user.is_anonymous %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'yumminess:dashboard' %}">Home</a>
+          </li>
+            {% if user.is_superuser %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'yumminess:menu_option_plate_list' %}">Menu plates</a>
+            </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'yumminess:menu_option_list' %}">Options</a>
+              </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'yumminess:menu_list' %}">Menus</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'yumminess:order_list' %}">Orders</a>
+            </li>
+            {% if user.is_superuser %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'yumminess:employee_list' %}">Employees</a>
+                </li>
+            {% endif %}
+          </ul>
+          <a class="nav-link" href="{% url 'yumminess:logout' %}">Logout</a>
+      </div>
+    </nav>
+{% endif %}
