@@ -76,3 +76,4 @@ app.conf.beat_schedule = {
         "schedule": crontab(minute=0, hour=10, day_of_week='1-5')
     }
 }
+

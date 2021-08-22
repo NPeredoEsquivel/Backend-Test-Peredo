@@ -25,3 +25,5 @@ def slack_message(string):
             'Request to slack returned an error %s, the response is:\n%s'
             % (response.status_code, response.text)
         )
+
+    return response.status_code

@@ -242,9 +242,8 @@ class MenuCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         response = super(MenuCreateView, self).form_valid(form)
-        menu_id = form.instance.id
         menu_uuid = form.instance.uuid
-        form.generate_slack_message(menu_id, menu_uuid)
+        form.generate_slack_message(menu_uuid)
         return response
 
 
@@ -291,10 +290,9 @@ class MenuUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super(MenuUpdateView, self).form_valid(form)
-        menu_id = form.instance.id
         menu_uuid = form.instance.uuid
 
-        form.update_slack_message(menu_id, menu_uuid)
+        form.update_slack_message(menu_uuid)
         return response
 
     def get_success_url(self):
@@ -413,7 +411,6 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
         current_user = self.request.user
         if not current_user.is_superuser:
             kwargs['employee'] = Employee.objects.filter(user__id=current_user.id)
-            print(kwargs['employee'])
 
         return kwargs
 

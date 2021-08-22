@@ -88,6 +88,33 @@ class MenuOptionForm(forms.ModelForm):
             raise forms.ValidationError('There\'s an option with the same plates you\'ve selected')
 
 
+def generate_message(*args):
+    menu_uuid = args[0]
+    created_at = args[1]
+    options = args[2]
+    print(created_at)
+    print(options)
+
+    slack_message = "Hello!\n" \
+                    "I share with you today\'s menu :)\n"
+
+    url = project_url + 'yumminess/menu/' + str(menu_uuid)
+    option_index = 1
+    for option in options:
+        menu_option = "Option " + str(option_index) + ": (" + str(option.menu_option_name) + ") " + str(
+            option.menu_option_entrance_plate)
+        if option.menu_option_bottom_plate:
+            menu_option += ", " + str(option.menu_option_bottom_plate)
+        menu_option += ", " + str(option.menu_option_dessert_plate) + "."
+        slack_message += menu_option + """ \n"""
+        option_index += 1
+
+    slack_message += """In the next url you can check the menu!\n""" + str(url)
+
+    SlackMessage.objects.create(created_at=created_at,
+                                message_text=slack_message)
+
+
 class MenuForm(forms.ModelForm):
     menu_name = forms.CharField(max_length=30)
     menu_options = forms.ModelMultipleChoiceField(queryset=MenuOption.objects.all())
@@ -98,26 +125,20 @@ class MenuForm(forms.ModelForm):
         exclude = ['uuid']
 
     def generate_slack_message(self, *args):
-        menu_id = args[0]
-        menu_uuid = args[1]
+        menu_uuid = args[0]
         created_at = self.cleaned_data['created_at']
         options = self.cleaned_data['menu_options']
 
-        # SlackMessage.objects.create(created_at=created_at,
-        #                            message_text=""
-        #                            )
+        generate_message(menu_uuid, created_at, options)
 
     def update_slack_message(self, *args):
-        menu_id = args[0]
-        menu_uuid = args[1]
+        menu_uuid = args[0]
         created_at = self.cleaned_data['created_at']
         options = self.cleaned_data['menu_options']
 
-    #    slack_message = SlackMessage.objects.get(created_at=created_at).delete()
-    #
-    #     SlackMessage.objects.create(created_at=created_at,
-    #                                 message_text=""
-    #                                 )
+        SlackMessage.objects.get(created_at=created_at).delete()
+
+        generate_message(menu_uuid, created_at, options)
 
     def clean_menu_name(self):
         menu_name_form_data = self.cleaned_data['menu_name']

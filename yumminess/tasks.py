@@ -1,16 +1,20 @@
 from .slackmessage import slack_message
 from celery import shared_task
 from datetime import date
+from .models import SlackMessage
+
 
 @shared_task
 def send_slack_message_menu():
-    slack_message("Testing slack messages")
-    return None
+    sent = False
+    current_date = date.today()
+    slack_message_object = SlackMessage.objects.get(created_at=current_date)
 
+    if not slack_message_object.sent:
+        status_code = slack_message(slack_message_object.message_text)
+        if status_code == 200:
+            slack_message_object.sent = True
+            slack_message_object.save()
+            sent = True
 
-@shared_task
-def create_slack_message():
-
-    slack_message("Se ha creado el mensaje de slack para poder enviarlo")
-    return None
-
+    return sent
