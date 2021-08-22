@@ -21,6 +21,7 @@ urlpatterns = [
     path('menu-option/list', views.MenuOptionListView.as_view(), name='menu-option-list'),
     path('menu-option/create', views.MenuOptionCreateView.as_view(), name='menu-option-create'),
     path('menu-option/<int:pk>', views.MenuOptionDetailView.as_view(), name='menu-option-detail'),
+    path('menu-option/<int:pk>/send-slack', views.MenuOptionDetailView.as_view(), name='menu-option-detail'),
     path('menu-option/<int:pk>/update', views.MenuOptionUpdateView.as_view(), name='menu-option-update'),
     path('menu-option/<int:pk>/delete', views.MenuOptionDeleteView.as_view(), name='menu-option-delete'),
     path('menu/list', views.MenuListView.as_view(), name='menu-list'),

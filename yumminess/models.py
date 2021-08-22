@@ -21,13 +21,9 @@ class Employee(models.Model):
 
 
 class SlackMessage(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=False)
     message_text = models.CharField(max_length=500)
-
-
-class SlackMessageEmployee(models.Model):
-    slack_message = models.ForeignKey(SlackMessage, on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
+    sent = models.BooleanField()
 
 
 class MenuPlate(models.Model):
@@ -62,7 +58,7 @@ class MenuOption(models.Model):
 class Menu(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4())
     menu_name = models.CharField(max_length=30)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=False)
     menu_options = models.ManyToManyField(MenuOption)
 
     def __str__(self):

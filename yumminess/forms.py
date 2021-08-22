@@ -1,7 +1,10 @@
 from django import forms
-from .models import Employee, MenuPlate, MenuOption, Menu, Order
+from .models import Employee, MenuPlate, MenuOption, Menu, Order, SlackMessage
 from datetime import date, datetime
 from django.contrib.auth.models import User
+from django.conf import settings
+
+project_url = settings.BASE_URL
 
 
 class DateInput(forms.DateInput):
@@ -90,6 +93,28 @@ class MenuForm(forms.ModelForm):
         model = Menu
         exclude = ['uuid']
 
+    def generate_slack_message(self, *args):
+        menu_id = args[0]
+        menu_uuid = args[1]
+        created_at = self.cleaned_data['created_at']
+        options = self.cleaned_data['menu_options']
+
+        SlackMessage.objects.create(created_at=created_at,
+                                    message_text=""
+                                    )
+
+    def update_slack_message(self, *args):
+        menu_id = args[0]
+        menu_uuid = args[1]
+        created_at = self.cleaned_data['created_at']
+        options = self.cleaned_data['menu_options']
+        slack_message = SlackMessage.objects.get(created_at=created_at).delete()
+
+        SlackMessage.objects.create(created_at=created_at,
+                                    message_text=""
+                                    )
+
+
     def clean_menu_name(self):
         menu_name_form_data = self.cleaned_data['menu_name']
 
@@ -97,12 +122,12 @@ class MenuForm(forms.ModelForm):
             raise forms.ValidationError('The menu\'s name %s already exists' % menu_name_form_data)
         return menu_name_form_data
 
-    def clean_date_created(self):
+    def clean_created_at(self):
         created_at_form_data = self.cleaned_data.get('created_at')
         today_date = date.today()
 
         menu_already_exists_for_today = Menu.objects.filter(created_at=created_at_form_data)
-
+        print(menu_already_exists_for_today)
         if menu_already_exists_for_today:
             raise forms.ValidationError("Only one menu must be created for a particular day")
         if created_at_form_data < today_date:

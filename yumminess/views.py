@@ -9,10 +9,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from django.contrib.auth.models import User
 from datetime import date
-from .tasks import slack_message_task
-
 from .models import Employee, MenuPlate, MenuOption, Menu, Order
 from .forms import EmployeeForm, MenuPlateForm, MenuOptionForm, MenuForm, OrderForm
+from .tasks import send_slack_message_menu
 
 
 class LoginView(View):
@@ -198,8 +197,11 @@ class MenuCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('yumminess:menu-list')
 
     def form_valid(self, form):
-        slack_message_task()
-        return super(MenuCreateView, self).form_valid(form)
+        response = super(MenuCreateView, self).form_valid(form)
+        menu_id = form.instance.id
+        menu_uuid = form.instance.uuid
+        form.generate_slack_message(menu_id, menu_uuid)
+        return response
 
 
 class MenuDetailView(DetailView):
@@ -226,6 +228,14 @@ class MenuUpdateView(LoginRequiredMixin, UpdateView):
     form_class = MenuForm
     template_name = 'menu/update.html'
     context_object_name = 'menu'
+
+    def form_valid(self, form):
+        response = super(MenuUpdateView, self).form_valid(form)
+        menu_id = form.instance.id
+        menu_uuid = form.instance.uuid
+
+        form.update_slack_message(menu_id, menu_uuid)
+        return response
 
     def get_success_url(self):
         return reverse_lazy('yumminess:menu-detail', kwargs={'pk': self.object.id})

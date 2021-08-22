@@ -3,6 +3,7 @@ import os
 from celery import Celery
 
 from .envtools import getenv
+from celery.schedules import crontab
 
 
 class CelerySettings:
@@ -68,3 +69,10 @@ settings = CelerySettings()
 app = Celery("backend_test")
 app.config_from_object(settings)
 app.autodiscover_tasks()
+
+app.conf.beat_schedule = {
+    "see-you-in-ten-seconds-task": {
+        "task": "yumminess.tasks.send_slack_message_menu",
+        "schedule": crontab(minute=0, hour=10, day_of_week='1-5')
+    }
+}

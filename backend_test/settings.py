@@ -20,6 +20,7 @@ from .envtools import getenv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_URL = "http://localhost:8000/"
 
 SECRET_KEY = getenv("SECRET_KEY", default="###SECRET_KEY###")
 
@@ -31,7 +32,6 @@ USE_X_FORWARDED_HOST = False
 SESSION_COOKIE_HTTPONLY = True
 
 SERVER_URL = os.getenv("SERVER_URL", default="*")
-
 
 APPEND_SLASH = False
 
@@ -80,10 +80,7 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = "backend_test.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -104,7 +101,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://{}:6379/0".format(
+        "LOCATION": "redis://localhost:6379".format(
             getenv("REDIS_CACHE_HOSTNAME", default="redis")
         ),
         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
@@ -129,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -143,12 +139,11 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_URL = "./static/"
 STATICFILES_DIRS = [
-   os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static')
 ]
 
 REST_FRAMEWORK = {
@@ -160,87 +155,14 @@ REST_FRAMEWORK = {
 
 if getenv("BROWSABLE_API_RENDERER", default=False, coalesce=bool):
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = REST_FRAMEWORK[
-        "DEFAULT_RENDERER_CLASSES"
-    ] + ["rest_framework.renderers.BrowsableAPIRenderer"]
+                                                     "DEFAULT_RENDERER_CLASSES"
+                                                 ] + ["rest_framework.renderers.BrowsableAPIRenderer"]
 
 # APP SPECIFIC SETTINGS
 
 # if getenv("SENTRY_DSN", default=None):
 #    sentry_sdk.init(dsn=getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": True,
-    "formatters": {
-        "fluent_formatter": {
-            "()": "backend_test.logging_formatter.VerboseFluentRecordFormatter",
-            "format": {
-                "level": "%(levelname)s",
-                "pathname": "%(pathname)s",
-                "hostname": "%(hostname)s",
-                "logger": "%(name)s",
-                "module": "%(module)s",
-                "funcname": "%(funcName)s",
-                "namespace": os.getenv("KUBERNETES_NAMESPACE", "localhost"),
-                "release": os.getenv("GIT_HASH", "local"),
-            },
-            "encoder_class": "django.core.serializers.json.DjangoJSONEncoder",
-            "raise_on_format_error": DEBUG,
-        },
-        "simple": {
-            "format": "[{asctime}] {levelname} {message}",
-            "style": "{",
-            "datefmt": "%d/%b/%Y %H:%M:%S",
-        },
-        "django.server": {
-            "()": "django.utils.log.ServerFormatter",
-            "format": "[{server_time}] {message}",
-            "style": "{",
-        },
-    },
-    "filters": {"require_debug_true": {"()": "django.utils.log.RequireDebugTrue"}},
-    "handlers": {
-        "sentry": {
-            "level": "WARNING",
-            "class": "sentry_sdk.integrations.logging.EventHandler",
-        },
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": "DEBUG",
-            "formatter": "simple",
-            "filters": ["require_debug_true"],
-        },
-        "fluent": {
-            "class": "fluent.handler.FluentHandler",
-            "host": os.getenv("FLUENT_HOST", "fluentbit"),
-            "port": int(os.getenv("FLUENT_PORT", 24224)),
-            "tag": os.getenv("FLUENT_TAG", "catalog"),
-            "formatter": "fluent_formatter",
-            "level": "INFO",
-        },
-        "django.server": {
-            "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "django.server",
-        },
-    },
-    "root": {"level": "WARNING", "handlers": ["sentry"]},
-    "loggers": {
-        "django": {"handlers": ["console"], "propagate": True},
-        "django.db": {
-            "handlers": ["console"],
-            "propagate": False,
-            "level": os.getenv("DB_LOGGING_LEVEL", "INFO"),
-        },
-        "django.server": {"handlers": ["django.server"], "propagate": False},
-        "backend_test": {
-            "handlers": ["fluent", "console"],
-            "level": os.getenv("APP_LOGGING_LEVEL", "INFO"),
-            "propagate": True,
-        },
-    },
-}
 
 
-SLACK_WEB_HOOK = getenv("SLACK_WEB_HOOK", default='')
-#SLACK_WEB_HOOK='https://hooks.slack.com/services/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'
+SLACK_WEB_HOOK = 'https://hooks.slack.com/services/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'
