@@ -74,4 +74,4 @@ class Order(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     menu_option = models.ForeignKey(MenuOption, on_delete=models.SET_NULL, null=True)
     order_customization = models.CharField(max_length=400, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=False)

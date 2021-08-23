@@ -344,7 +344,6 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         current_user = self.request.user
         if not current_user.is_superuser:
             kwargs['employee'] = Employee.objects.filter(user__id=current_user.id)
-            print(kwargs['employee'])
 
         return kwargs
 

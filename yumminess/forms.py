@@ -1,3 +1,4 @@
+import pytz
 from django import forms
 from .models import Employee, MenuOptionPlate, MenuOption, Menu, Order, SlackMessage
 from datetime import date, datetime
@@ -92,8 +93,6 @@ def generate_message(*args):
     menu_uuid = args[0]
     created_at = args[1]
     options = args[2]
-    print(created_at)
-    print(options)
 
     slack_message = "Hello!\n" \
                     "I share with you today\'s menu :)\n"
@@ -165,10 +164,12 @@ class MenuForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     menu_option = forms.ModelChoiceField(queryset=MenuOption.objects.all())
     order_customization = forms.CharField(required=False, max_length=400)
+    employee = forms.ModelChoiceField(queryset=Employee.objects.none())
+    created_at = forms.DateTimeField(disabled=True, initial=datetime.now())
 
     class Meta:
         model = Order
-        exclude = ['created_at']
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         menu_options = kwargs.pop('menu_options')
@@ -178,19 +179,23 @@ class OrderForm(forms.ModelForm):
         self.fields['menu_option'].queryset = menu_options
 
     def clean(self):
-        created_at_backend_value = datetime.now()
+        created_at_backend_value = self.cleaned_data['created_at'].replace(tzinfo=pytz.timezone('America/Santiago'))
         created_at_backend_value_date = date.today()
-        created_at_limit = datetime.now()
+        created_at_limit = datetime.now().replace(tzinfo=pytz.timezone('America/Santiago'))
+
+        print(created_at_backend_value)
 
         date_threshold = created_at_limit.replace(hour=11, minute=0, second=0, microsecond=0)
 
         employee_id = self.cleaned_data['employee']
-        order_existence = Order.objects.exclude(pk=self.instance.pk).get(created_at__date=created_at_backend_value_date,
-                                                                         employee_id=employee_id)
+
+        order_existence = Order.objects.exclude(pk=self.instance.pk).filter(
+            created_at__date=created_at_backend_value_date,
+            employee_id=employee_id)
         if order_existence:
             raise forms.ValidationError("There\'s already an order for today.")
 
-        if created_at_backend_value > date_threshold:
+        if created_at_backend_value >= date_threshold:
             raise forms.ValidationError("You can no longer create your Order. The deadline is set for 11:00 CLT")
 
 
@@ -198,10 +203,11 @@ class OrderAdminForm(forms.ModelForm):
     menu_option = forms.ModelChoiceField(queryset=MenuOption.objects.all())
     order_customization = forms.CharField(required=False, max_length=400)
     employee = forms.ModelChoiceField(queryset=Employee.objects.all())
+    created_at = forms.DateTimeField(disabled=True, initial=datetime.now)
 
     class Meta:
         model = Order
-        exclude = ['created_at']
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         menu_options = kwargs.pop('menu_options')
@@ -216,3 +222,40 @@ class OrderAdminForm(forms.ModelForm):
                                                                             employee_id=employee_id)
         if order_existence:
             raise forms.ValidationError("There\'s already an order for today.")
+
+
+# Custom form to test the creation date, here I dont disable it so it can take the date in the test file
+class TestOrderForm(forms.ModelForm):
+    menu_option = forms.ModelChoiceField(queryset=MenuOption.objects.all())
+    order_customization = forms.CharField(required=False, max_length=400)
+    employee = forms.ModelChoiceField(queryset=Employee.objects.none())
+    created_at = forms.DateTimeField()
+
+    class Meta:
+        model = Order
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        menu_options = kwargs.pop('menu_options')
+        employee = kwargs.pop('employee')
+        super(TestOrderForm, self).__init__(*args, **kwargs)
+        self.fields['employee'].queryset = employee
+        self.fields['menu_option'].queryset = menu_options
+
+    def clean(self):
+        created_at_backend_value = self.cleaned_data['created_at'].replace(tzinfo=pytz.timezone('America/Santiago'))
+        created_at_backend_value_date = date.today()
+        created_at_limit = datetime.now().replace(tzinfo=pytz.timezone('America/Santiago'))
+
+        date_threshold = created_at_limit.replace(hour=11, minute=0, second=0, microsecond=0)
+
+        employee_id = self.cleaned_data['employee']
+
+        order_existence = Order.objects.exclude(pk=self.instance.pk).filter(
+            created_at__date=created_at_backend_value_date,
+            employee_id=employee_id)
+        if order_existence:
+            raise forms.ValidationError("There\'s already an order for today.")
+
+        if created_at_backend_value >= date_threshold:
+            raise forms.ValidationError("You can no longer create your Order. The deadline is set for 11:00 CLT")
