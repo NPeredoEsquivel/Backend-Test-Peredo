@@ -24,7 +24,7 @@ To configure base project variable, you need to change BASE_URL in settings.py (
 BASE_URL = "http://localhost:8000/"
 ```
 
-##Webhook configuration
+## Webhook configuration
 To send messages to slack workspace, the project uses webhooks and to activate the periodic task, you need to have a slack application (If you dont have one go to this url and follow the step by step https://api.slack.com/apps). Having the workspace configured, you need to obtain the 
 Webhook URL (i.e https://hooks.slack.com/services/XXXXXXX/XXXXXXX/XXXXXXXXXXXXXX). If you already have one, you need to place the hook url in settings.py.
 
@@ -32,14 +32,14 @@ Webhook URL (i.e https://hooks.slack.com/services/XXXXXXX/XXXXXXX/XXXXXXXXXXXXXX
 SLACK_WEB_HOOK = https://hooks.slack.com/services/XXXXXXXXXX/XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX.
 ```
 
-##Project flow
+## Project flow
 The project is very intuitive, but here are some explanations of what can Nora do. Logging in with nora, you can feed this project with data. The flow is to make the menu option plates first to assign them to the menu options, after this you can create a different kind of menu with the different options. You can create employees too, they're the another importants actors in the system, because the main goal is to manage the menus for them so they can have the meal on time and well served. When you create employees with Nora, you create employees with some backend logic, so employees can login to the application. Now the employees can order a menu with a datetime threshold of 11:00 am CLT.
 
 Nora can create only one menu per day, and the orders has the options of that menu only. And when the menu is being made, a slack message is created in the backend so when the time comes to send the message with the periodic task it will handle it correctly. This message have an status, false when the message haven't being sent and true otherwise.
 
 The menu has a detail view which can be acceded by the employees, they can be logged in or not, doesn't mind. Because the menu has an special attribute which is an UUID. The url with the UUID is sent in the message.
 
-##Celery periodic task
+## Celery periodic task
 To activate the periodic task, you need to configure some params.
 The settings.py obtains some env variables, and in this case docker wasn't used, so you need to export the variables to your env has follows:
 
